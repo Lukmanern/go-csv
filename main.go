@@ -11,22 +11,24 @@ type CSV struct {
 }
 
 func main() {
-	var csv CSV
-	csv.header = []string{"No", "Name", "Phone Number"}
-	csv.data = [][]string{
-		{"1", "John", "123-456-7890"},
-		{"2", "Jane", "456-789-0123"},
-		{"3", "Bob", "789-012-3456"},
+	var csv CSV = CSV{
+		header: []string{"No", "Name", "Phone Number"},
+		data: [][]string{
+			{"1", "John", "123-456-7890"},
+			{"2", "Jane", "456-789-0123"},
+			{"3", "Bob", "789-012-3456"},
+		},
 	}
 
-	err := createCSVFile("data.csv", header, data)
+	err := createCSVFile("data.csv", csv)
 	if err != nil {
 		panic(err)
 	}
 }
 
-// createCSVFile creates a new CSV file with the specified filename, header row, and data rows
-func createCSVFile(filename string, header []string, data [][]string) error {
+// createCSVFile creates a new CSV file with
+// the specified filename, header and data
+func createCSVFile(filename string, CSVdata CSV) error {
 	// Create the CSV file
 	file, err := os.Create(filename)
 	if err != nil {
@@ -38,13 +40,13 @@ func createCSVFile(filename string, header []string, data [][]string) error {
 	writer := csv.NewWriter(file)
 
 	// Write the header row to the CSV file
-	err = writeCSVRow(writer, header)
+	err = writeCSVRow(writer, CSVdata.header)
 	if err != nil {
 		return err
 	}
 
 	// Write the data rows to the CSV file
-	for _, row := range data {
+	for _, row := range CSVdata.data {
 		err = writeCSVRow(writer, row)
 		if err != nil {
 			return err
